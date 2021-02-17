@@ -3,14 +3,10 @@ package me.repocord.server_manager;
 import me.repocord.server_manager.helpers.Module;
 import me.repocord.server_manager.helpers.StatusManager;
 import me.repocord.server_manager.modules.GeneralModule;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.User;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public final class Config {
     // public vars

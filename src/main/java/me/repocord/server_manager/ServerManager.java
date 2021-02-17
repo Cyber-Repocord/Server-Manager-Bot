@@ -1,6 +1,5 @@
 package me.repocord.server_manager;
 
-import me.repocord.server_manager.helpers.StatusManager;
 import me.repocord.server_manager.listeners.Listener;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;

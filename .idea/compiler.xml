@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="Server Manager" />
+        <module name="Server-Manager-Bot" />
       </profile>
     </annotationProcessing>
   </component>
