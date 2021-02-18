@@ -5,32 +5,33 @@ import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
 public abstract class Command {
     private final boolean dms;
-    private final boolean guilds;
     private final String id;
     private final String name;
     private final String description;
 
-    protected Command(boolean dms, boolean guilds, String id, String name, String description) {
+    protected Command(boolean dms, String id, String name, String description) {
         this.dms = dms;
-        this.guilds = guilds;
         this.id = id;
         this.name = name;
         this.description = description;
     }
     protected Command(String id, String name, String description) {
-        this(true, true, id, name, description);
+        this(true, id, name, description);
     }
 
-    public final void execute(GuildMessageReceivedEvent event) {
-        if (guilds) {
-            String[] args = event.getMessage().getContentRaw().split(" ");
+    public final void execute(GuildMessageReceivedEvent event){
+        String[] args = event.getMessage().getContentRaw().split(" ");
+        try {
             execute(args, event);
-        }
+        } catch (Exception ignored) {}
+
     }
     public final void execute(PrivateMessageReceivedEvent event) {
         if (dms) {
             String[] args = event.getMessage().getContentRaw().split(" ");
-            execute(args, event);
+            try {
+                execute(args, event);
+            } catch (Exception ignored) {}
         }
     }
 
@@ -44,6 +45,6 @@ public abstract class Command {
         return description;
     }
 
-    abstract protected void execute(String[] args, GuildMessageReceivedEvent event);
-    abstract protected void execute(String[] args, PrivateMessageReceivedEvent event);
+    abstract protected void execute(String[] args, GuildMessageReceivedEvent event) throws Exception;
+    abstract protected void execute(String[] args, PrivateMessageReceivedEvent event) throws Exception;
 }

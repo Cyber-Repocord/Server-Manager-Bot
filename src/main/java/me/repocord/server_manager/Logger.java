@@ -10,11 +10,11 @@ public final class Logger {
 
     public static void log(String message) {
         String time = formatter.format(LocalDateTime.now());
-        System.out.println("\033[34m[INFO " + time + "] " + message + "\033[32m");
+        System.out.println("\033[34m[INFO " + time + "] " + message + "\033[0m");
     }
 
     public static void error(String message) {
         String time = formatter.format(LocalDateTime.now());
-        System.out.println("\033[31m[ERROR " + time + "] " + message + "\033[32m");
+        System.out.println("\033[31m[ERROR " + time + "] " + message + "\033[0m");
     }
 }

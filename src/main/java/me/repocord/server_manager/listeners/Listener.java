@@ -5,10 +5,12 @@ import me.repocord.server_manager.Logger;
 import me.repocord.server_manager.helpers.Command;
 import me.repocord.server_manager.helpers.Module;
 import me.repocord.server_manager.helpers.StatusManager;
-import me.repocord.server_manager.modules.AdminModule;
+import me.repocord.server_manager.admin.AdminModule;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.priv.react.PrivateMessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,6 +37,15 @@ public final class Listener extends ListenerAdapter {
     }
 
     // TODO add reaction listener
+    @Override
+    public void onGuildMessageReactionAdd(@NotNull GuildMessageReactionAddEvent event) {
+
+    }
+
+    @Override
+    public void onPrivateMessageReactionAdd(@NotNull PrivateMessageReactionAddEvent event) {
+
+    }
 
     private void execute(GuildMessageReceivedEvent event) {
         String commandAsString = event.getMessage().getContentRaw().split(" ")[0];

@@ -15,10 +15,11 @@ public final class Config {
     private Config() {}
     // public vars
     public static final String PREFIX = "s!";
-    public static final String TOKEN = getToken(); // new Scanner(System.in).nextLine();
+    public static final String TOKEN = getToken();
     public static final boolean USE_SHARDING = false;
     public static final int SHARD_COUNT = 0;
     public static final int POINTS_COOLDOWN_IN_MINUTES = 3;
+
 
     // private vars
     private static final List<Module> modules = new ArrayList<>();
@@ -47,6 +48,7 @@ public final class Config {
 
         String MAC_PATH = "/Users/max/Desktop/token.txt";
         String WIN_PATH = "/Users/max/Desktop/token.txt";
+        String PI_PATH = "/home/pi/Desktop/token.txt";
 
         String token;
 
@@ -54,8 +56,10 @@ public final class Config {
             Scanner file;
             if (System.getProperty("os.name").equals("Mac OS X")) {
                 file = new Scanner(new File(MAC_PATH));
-            } else {
+            } else if (System.getProperty("os.name").equals("Windows 10")) {
                 file = new Scanner(new File(WIN_PATH));
+            } else {
+                file = new Scanner(new File(PI_PATH));
             }
             token = file.nextLine();
             file.close();

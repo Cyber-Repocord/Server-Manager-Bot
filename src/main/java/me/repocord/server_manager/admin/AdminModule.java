@@ -1,4 +1,4 @@
-package me.repocord.server_manager.modules;
+package me.repocord.server_manager.admin;
 
 import me.repocord.server_manager.helpers.Command;
 import me.repocord.server_manager.helpers.Module;
@@ -12,6 +12,7 @@ public final class AdminModule extends Module {
 
     @Override
     protected List<Command> getCommandsForModule(List<Command> commands) {
+        commands.add(new SetupCommand());
         return commands;
     }
 }

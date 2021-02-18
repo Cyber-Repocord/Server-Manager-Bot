@@ -8,7 +8,7 @@ import java.util.List;
 
 public final class GeneralModule extends Module {
     public GeneralModule() {
-        super("General", "All the general commands!", "general");
+        super("General", "Contains all the general commands!", "general");
     }
 
     protected List<Command> getCommandsForModule(List<Command> commands) {
