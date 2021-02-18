@@ -34,7 +34,8 @@ public final class Listener extends ListenerAdapter {
         StatusManager.start(event.getJDA());
     }
 
-    // Guild
+    // TODO add reaction listener
+
     private void execute(GuildMessageReceivedEvent event) {
         String commandAsString = event.getMessage().getContentRaw().split(" ")[0];
         Command command;
@@ -57,7 +58,6 @@ public final class Listener extends ListenerAdapter {
         return false;
     }
 
-    // DMs
     private void execute(PrivateMessageReceivedEvent event) {
         String commandAsString = event.getMessage().getContentRaw().split(" ")[0];
         Command command;

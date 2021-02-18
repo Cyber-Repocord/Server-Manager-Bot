@@ -11,11 +11,12 @@ public class HelpCommand extends Command {
 
     @Override
     protected void execute(String[] args, GuildMessageReceivedEvent event) {
-        event.getChannel().sendMessage("Works").queue();
+        // TODO finish help command
+        event.getChannel().sendMessage("Test").queue();
     }
 
     @Override
     protected void execute(String[] args, PrivateMessageReceivedEvent event) {
-        event.getChannel().sendMessage("Works").queue();
+
     }
 }

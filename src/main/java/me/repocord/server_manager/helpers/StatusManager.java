@@ -8,6 +8,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public final class StatusManager {
+    private StatusManager() {}
+
     private static boolean started = false;
     private static JDA jda;
 

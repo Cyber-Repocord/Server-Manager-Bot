@@ -7,6 +7,8 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import javax.security.auth.login.LoginException;
 
 public final class ServerManager {
+    private ServerManager() {}
+
     public static void main(String[] args) {
         try {
             if (Config.USE_SHARDING) start(Config.TOKEN, Config.SHARD_COUNT);
