@@ -17,4 +17,8 @@ public final class Logger {
         String time = formatter.format(LocalDateTime.now());
         System.out.println("\033[31m[ERROR " + time + "] " + message + "\033[0m");
     }
+
+    public static String getTime() {
+        return formatter.format(LocalDateTime.now());
+    }
 }

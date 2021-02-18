@@ -1,5 +1,6 @@
 package me.repocord.server_manager.helpers;
 
+import me.repocord.server_manager.Logger;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
@@ -23,15 +24,18 @@ public abstract class Command {
         String[] args = event.getMessage().getContentRaw().split(" ");
         try {
             execute(args, event);
-        } catch (Exception ignored) {}
-
+        } catch (Exception e) {
+            Logger.error("There was an error while executing command (" + id + "). Error message: " + e.getMessage());
+        }
     }
     public final void execute(PrivateMessageReceivedEvent event) {
         if (dms) {
             String[] args = event.getMessage().getContentRaw().split(" ");
             try {
                 execute(args, event);
-            } catch (Exception ignored) {}
+            } catch (Exception e) {
+                Logger.error("There was an error while executing command (" + id + "). Error message: " + e.getMessage());
+            }
         }
     }
 

@@ -3,8 +3,7 @@ package me.repocord.server_manager.helpers;
 import me.repocord.server_manager.Logger;
 import net.dv8tion.jda.api.entities.TextChannel;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -12,11 +11,13 @@ public final class ConfigFile {
     // TODO
     private final File file;
     private Data data;
+    private final TextChannel channel;
 
     private ConfigFile(String path, boolean backup, TextChannel channel, int intervalInHours) throws IOException {
         File file = new File(path);
-        if (file.getPath().endsWith(".json")) throw new IOException("File is not a .json file!");
+        if (!file.getPath().endsWith(".json")) throw new IOException("File is not a .json file!");
         this.file = file;
+        this.channel = channel;
 
         if (!file.exists()) {
             data = new Data();
@@ -25,39 +26,50 @@ public final class ConfigFile {
             data = read();
         }
         if (backup) {
-            Backupper backupper = new Backupper(intervalInHours, channel);
+            if (intervalInHours <= 0) intervalInHours = 1;
+            Backupper backupper = new Backupper(intervalInHours);
             backupper.start();
         }
-    }
-    public ConfigFile(String path) throws IOException {
-        this(path, false, null, 0);
     }
     public ConfigFile(String path, TextChannel channel, int intervalInHours) throws IOException {
         this(path, true, channel, intervalInHours);
     }
+    public ConfigFile(String path, TextChannel channel) throws IOException {
+        this(path, false, channel, 0);
+    }
 
-    private Data read() {
+    private Data read() throws IOException {
+        BufferedReader in = new BufferedReader(new FileReader(file));
+
+        in.readLine();
         return new Data();
     }
-    public void save() {
-
+    public void save() throws IOException {
+        if (!file.exists()) if (!file.createNewFile()) throw new IOException("Couldn't create file!");
+        FileWriter out = new FileWriter(file);
+        out.write("Saved at " + Logger.getTime());
+        out.close();
     }
-    private void reload() {
+    public void backupNow() throws IOException {
+        save();
+        channel.sendFile(file).queue();
+    }
+
+    public void reload(boolean save) throws IOException {
+        if (save) save();
         data = read();
     }
 
-    private final class Data {
+    private static final class Data {
 
     }
 
     private final class Backupper {
         private boolean started = false;
         private final int intervalInHours;
-        private final TextChannel channel;
 
-        public Backupper(int intervalInHours, TextChannel channel) {
+        public Backupper(int intervalInHours) {
             this.intervalInHours = intervalInHours;
-            this.channel = channel;
         }
 
         public void start() {
@@ -77,12 +89,10 @@ public final class ConfigFile {
             @Override
             public void run() {
                 try {
-                    save();
-                    channel.sendFile(file).queue();
+                    backupNow();
                 } catch (Exception e) {
-                    Logger.error("Couldn't save or send data file while back-upping.");
+                    Logger.error("Couldn't backup automatically. There was a problem: " + e.getMessage());
                 }
-
             }
         }
     }

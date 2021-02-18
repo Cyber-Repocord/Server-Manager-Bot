@@ -1,9 +1,11 @@
 package me.repocord.server_manager;
 
+import me.repocord.server_manager.helpers.ConfigFile;
 import me.repocord.server_manager.helpers.Module;
 import me.repocord.server_manager.helpers.StatusManager;
 import me.repocord.server_manager.modules.GeneralModule;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,22 +27,36 @@ public final class Config {
     private static final List<Module> modules = new ArrayList<>();
     private static final List<String> admins = new ArrayList<>();
     private static final List<StatusManager.Status> statuses = new ArrayList<>();
+    private static ConfigFile configFile = null;
+    private static final int autoBackupIntervalInHours = 3;
+    private static final String configFilePath = "/Users/max/Desktop/config.json";
 
     // public methods
     public static List<Module> getModules() { return modules; }
     public static List<String> getAdmins() { return admins; }
     public static List<StatusManager.Status> getStatuses() { return statuses; }
+    public static void setConfigFile(TextChannel channel) {
+        try {
+            if (configFile == null) configFile = new ConfigFile(configFilePath, channel, autoBackupIntervalInHours);
+            configFile.backupNow();
+        } catch (IOException e) {
+            Logger.error("Config file couldn't be initialized: " + e.getMessage());
+        }
+    }
+    public static ConfigFile getConfigFile() {
+        return configFile;
+    }
 
     // static
     static {
         // TODO add more modules and commands
+
         modules.add(new GeneralModule());
 
         admins.add("542243770113064961");
 
         statuses.add(new StatusManager.Status(Activity.ActivityType.WATCHING, jda -> jda.getGuilds().get(0).retrieveMetaData().complete().getApproximateMembers() + " members"));
         statuses.add(new StatusManager.Status(Activity.ActivityType.WATCHING, jda -> "type " + Config.PREFIX + "help for help"));
-
     }
 
     private static String getToken() {

@@ -13,6 +13,7 @@ public final class AdminModule extends Module {
     @Override
     protected List<Command> getCommandsForModule(List<Command> commands) {
         commands.add(new SetupCommand());
+        commands.add(new BackupCommand());
         return commands;
     }
 }

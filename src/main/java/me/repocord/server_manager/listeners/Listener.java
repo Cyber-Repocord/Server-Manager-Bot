@@ -6,13 +6,15 @@ import me.repocord.server_manager.helpers.Command;
 import me.repocord.server_manager.helpers.Module;
 import me.repocord.server_manager.helpers.StatusManager;
 import me.repocord.server_manager.admin.AdminModule;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.priv.react.PrivateMessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public final class Listener extends ListenerAdapter {
     @Override
@@ -34,18 +36,18 @@ public final class Listener extends ListenerAdapter {
     public void onReady(@NotNull ReadyEvent event) {
         Logger.log("Bot is ready!");
         StatusManager.start(event.getJDA());
-    }
 
+        List<Guild> guilds = event.getJDA().getGuilds();
+        TextChannel channel = null;
+        for (Guild guild : guilds) {
+            for (TextChannel textChannel : guild.getTextChannels()) {
+                if (textChannel.getId().equals("811879847256915989")) channel = textChannel;
+            }
+        }
+        if (channel == null) Logger.error("Couldn't find channel for backup.");
+        else Config.setConfigFile(channel);
+    }
     // TODO add reaction listener
-    @Override
-    public void onGuildMessageReactionAdd(@NotNull GuildMessageReactionAddEvent event) {
-
-    }
-
-    @Override
-    public void onPrivateMessageReactionAdd(@NotNull PrivateMessageReactionAddEvent event) {
-
-    }
 
     private void execute(GuildMessageReceivedEvent event) {
         String commandAsString = event.getMessage().getContentRaw().split(" ")[0];
