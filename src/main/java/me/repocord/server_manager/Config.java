@@ -29,7 +29,7 @@ public final class Config {
     private static final List<StatusManager.Status> statuses = new ArrayList<>();
     private static ConfigFile configFile = null;
     private static final int autoBackupIntervalInHours = 3;
-    private static final String configFilePath = "/Users/max/Desktop/config.json";
+    private static final String configFilePath;
 
     // public methods
     public static List<Module> getModules() { return modules; }
@@ -50,6 +50,14 @@ public final class Config {
     // static
     static {
         // TODO add more modules and commands
+        String configFilePathNotFinal = "/Users/Max/Desktop/config.json";
+        try {
+            configFilePathNotFinal = getConfigFilePath();
+        } catch (RuntimeException e) {
+            Logger.error("Couldn't get config file path. Setting to default (\"" + configFilePathNotFinal + "\"). Error message: " + e.getMessage());
+        }
+        configFilePath = configFilePathNotFinal;
+
 
         modules.add(new GeneralModule());
 
@@ -59,31 +67,67 @@ public final class Config {
         statuses.add(new StatusManager.Status(Activity.ActivityType.WATCHING, jda -> "type " + Config.PREFIX + "help for help"));
     }
 
+    private static String getConfigFilePath() {
+        String path;
+        String os = System.getProperty("os.name");
+
+        String MAC_PATH = "/Users/max/Desktop/config.json";
+        String WIN10_PATH = "/Users/Max/Desktop/config.json";
+        String RPI_PATH = "/home/pi/Desktop/config.json";
+
+        switch (os) {
+            case "Mac OS X":
+                path = MAC_PATH;
+                break;
+            case "Windows 10":
+                path = WIN10_PATH;
+                break;
+            case "Raspberry PI 4":
+                path = RPI_PATH;
+                break;
+            default:
+                throw new RuntimeException("Couldn't recognize os name. (" + os + ")");
+        }
+
+        return path;
+    }
+
+
     private static String getToken() {
         // return ""; // <-- Put your token here, if you don't wanna use file reading, also you have to comment the code (after return) for it to work
 
         String MAC_PATH = "/Users/max/Desktop/token.txt";
-        String WIN_PATH = "/Users/max/Desktop/token.txt";
-        String PI_PATH = "/home/pi/Desktop/token.txt";
+        String WIN10_PATH = "/Users/max/Desktop/token.txt";
+        String RPI_PATH = "/home/pi/Desktop/token.txt";
 
         String token;
+        String os = System.getProperty("os.name");
 
         try {
             Scanner file;
-            if (System.getProperty("os.name").equals("Mac OS X")) {
-                file = new Scanner(new File(MAC_PATH));
-            } else if (System.getProperty("os.name").equals("Windows 10")) {
-                file = new Scanner(new File(WIN_PATH));
-            } else {
-                file = new Scanner(new File(PI_PATH));
+
+            switch (os) {
+                case "Mac OS X":
+                    file = new Scanner(new File(MAC_PATH));
+                    break;
+                case "Windows 10":
+                    file = new Scanner(new File(WIN10_PATH));
+                    break;
+                case "Raspberry PI 4":
+                    file = new Scanner(new File(RPI_PATH));
+                    break;
+                default:
+                    throw new IOException("Couldn't recognize os name. (" + os + ")");
             }
+
             token = file.nextLine();
             file.close();
         } catch (IOException e) {
-            System.out.print("Couldn't read token from file. Please enter it here: ");
+            Logger.error("Couldn't read token from file (" + e.getMessage() + "). Please enter it below");
             Scanner input = new Scanner(System.in);
 
             token = input.nextLine();
+            input.close();
         }
         return token;
     }
