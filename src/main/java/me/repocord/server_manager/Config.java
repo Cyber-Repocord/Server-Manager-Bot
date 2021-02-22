@@ -28,7 +28,7 @@ public final class Config {
     private static final List<String> admins = new ArrayList<>();
     private static final List<StatusManager.Status> statuses = new ArrayList<>();
     private static ConfigFile configFile = null;
-    private static final int autoBackupIntervalInHours = 3;
+    private static final int autoBackupIntervalInMinutes = 30;
     private static final String configFilePath;
 
     // public methods
@@ -37,8 +37,10 @@ public final class Config {
     public static List<StatusManager.Status> getStatuses() { return statuses; }
     public static void setConfigFile(TextChannel channel) {
         try {
-            if (configFile == null) configFile = new ConfigFile(configFilePath, channel, autoBackupIntervalInHours);
-            configFile.backupNow();
+            if (configFile == null) {
+                configFile = new ConfigFile(configFilePath, channel, autoBackupIntervalInMinutes);
+                configFile.backupNow();
+            }
         } catch (IOException e) {
             Logger.error("Config file couldn't be initialized: " + e.getMessage());
         }
@@ -94,14 +96,12 @@ public final class Config {
 
 
     private static String getToken() {
-        // return ""; // <-- Put your token here, if you don't wanna use file reading, also you have to comment the code (after return) for it to work
+        String token;
+        String os = System.getProperty("os.name");
 
         String MAC_PATH = "/Users/max/Desktop/token.txt";
         String WIN10_PATH = "/Users/max/Desktop/token.txt";
         String RPI_PATH = "/home/pi/Desktop/token.txt";
-
-        String token;
-        String os = System.getProperty("os.name");
 
         try {
             Scanner file;
@@ -123,7 +123,7 @@ public final class Config {
             token = file.nextLine();
             file.close();
         } catch (IOException e) {
-            Logger.error("Couldn't read token from file (" + e.getMessage() + "). Please enter it below");
+            Logger.error("Couldn't read token from file (" + e.getMessage() + "). Please enter it below.");
             Scanner input = new Scanner(System.in);
 
             token = input.nextLine();
